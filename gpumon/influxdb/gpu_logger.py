@@ -1,8 +1,10 @@
 import logging
 from contextlib import contextmanager
+from datetime import datetime
 from multiprocessing import Process
 from time import sleep
 
+import pytz
 from influxdb import InfluxDBClient
 from influxdb.exceptions import InfluxDBClientError
 from requests.exceptions import ConnectionError
@@ -29,9 +31,13 @@ def _switch_to_database(influxdb_client, database_name):
 
 
 def _compose_measurement_dict(gpu_num, gpu_dict, series_name):
+    local = pytz.timezone("Europe/Moscow")
+    naive = datetime.strptime(gpu_dict["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+    local_dt = local.localize(naive, is_dst=None)
+    utc_dt = datetime.strftime(local_dt.astimezone(pytz.utc), "%Y-%m-%d %H:%M:%S.%f")
     return {"measurement": series_name,
             "tags": {'GPU': gpu_num},
-            "time": gpu_dict['timestamp'],
+            "time": utc_dt,
             "fields": gpu_dict}
 
 

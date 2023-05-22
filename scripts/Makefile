@@ -22,10 +22,10 @@ run:
 	@chmod 777 $(grafana)
 	@mkdir $(influxdb)
 	@chmod 777 $(influxdb)
-	@docker-compose up -d
+	@docker compose up -d
 
 stop:
-	docker-compose down
+	docker compose down
 
 remove:
 	docker-compose down --rmi all

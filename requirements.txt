@@ -3,7 +3,7 @@ pandas>=0.19.1
 toolz>=0.8.2
 pip>=8.1.2
 setuptools
-pypandoc>=1.4
+pypandoc<1.8
 influxdb==5.0.0
 requests>=2.17.0
 python-dotenv[cli]==0.8.2
