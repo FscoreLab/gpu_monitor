@@ -32,7 +32,10 @@ def _switch_to_database(influxdb_client, database_name):
 
 def _compose_measurement_dict(gpu_num, gpu_dict, series_name):
     local = pytz.timezone("Europe/Moscow")
-    naive = datetime.strptime(gpu_dict["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+    try:
+        naive = datetime.strptime(gpu_dict["timestamp"], "%Y-%m-%d %H:%M:%S.%f")
+    except ValueError:
+        naive = datetime.strptime(gpu_dict["timestamp"], "%Y-%m-%d %H:%M:%S")    
     local_dt = local.localize(naive, is_dst=None)
     utc_dt = datetime.strftime(local_dt.astimezone(pytz.utc), "%Y-%m-%d %H:%M:%S.%f")
     return {"measurement": series_name,
